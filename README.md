@@ -11,7 +11,7 @@
 * Start postgresql by running `sudo systemctl start postgresql` in the terminal. It can be confirmed running with `sudo systemctl status postgresql`.
 * Next, swap to the postgres user by running `sudo -i -u postgres` in the terminal.
 * Run `createdb my_company_db` to create the database.
-* Set a password by first moving into the psql terminal with the command `psql`, then doing `ALTER USER postgres PASSWORD 'yourpassword';`, replacing 'yourpassword' with your preferred password.
+* Set a password by first moving into the psql terminal with the command `psql`, then doing `ALTER USER postgres PASSWORD 'yourpassword';`, replacing 'yourpassword' with your preferred password. Run `exit` to leave the query terminal.
 * Next, run `export DATABASE_URL="postgresql://postgres:yourpassword@localhost/my_company_db"`, with the 'yourpassword' replaced with your set password.
 * Finally, the database can be loaded from the files using the commands `psql -d $DATABASE_URL -f company_v3.02.sql` and `psql -d $DATABASE_URL -f team_setup.sql`.
 
