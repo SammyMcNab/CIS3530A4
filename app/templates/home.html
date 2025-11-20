@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Home Page</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="home_page">
+    <h1 class="home_title">Company Database</h1>
+    <div class="button-container">
+        <a href="{{ url_for('main.login') }}" class="button">Login</a>
+        <a href="{{ url_for('main.create_account') }}" class="button">Create Account</a>
+    </div>
+
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
