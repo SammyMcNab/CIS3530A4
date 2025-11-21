@@ -5,6 +5,31 @@
     <title>Create Account</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="home_page">
+<body class="create_account_page">
+    <h1>Create Account</h1>
+
+    <br><br><br><br><br><br>
+
+    <form method="post" action="{{ url_for('main.create_new_account') }}">
+        <div class="input_group">
+            <input type="text" id="username" name="username" placeholder="Username..." required>
+
+            <input type="password" id="password" name="password" placeholder="Password..." required>
+
+            <br>
+            
+            <a onclick="event.preventDefault(); this.closest('form').submit();" class="button">Create Account</a>
+        </div>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash {{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 </body>
 </html>
