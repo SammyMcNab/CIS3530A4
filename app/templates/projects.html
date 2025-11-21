@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Projects Portfolio Summary</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+<h1>Projects Portfolio Summary</h1>
+
+<table border="2">
+    <thead>
+        <tr>
+            <th>Project Name</th>
+            <th>Owning Department</th>
+            <th>
+                <!-- Filters by ascending headcount -->
+                <a href="{{ url_for('main.projects', sort_by='headcount', order='ASC') }}">Headcount ↑</a> 
+                <!-- Filters by descending headcount -->
+                <a href="{{ url_for('main.projects', sort_by='headcount', order='DESC') }}">↓</a>
+            </th>
+            <th>
+                <!-- Filters by ascending total hours -->
+                <a href="{{ url_for('main.projects', sort_by='total_hours', order='ASC') }}">Total Hours ↑</a> 
+                <!-- Filters by descending total hours -->
+                <a href="{{ url_for('main.projects', sort_by='total_hours', order='DESC') }}">↓</a> 
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    <!-- For each project in the total list of projects -->
+    {% for project in projects %}
+        <tr>
+            <!-- Project Name column -->
+            <td>
+                <!-- Each project name has a link to their associated project details page. The name 'project_details' refers to the function in routes.py, not the actual HTML page project_details_and_upsert.html -->
+                <a href="{{ url_for('main.project_details', project_id=project[0]) }}">
+                    {{ project[1] }}
+                </a>
+            </td>
+            <!-- Owning Department column -->
+            <td>{{ project[2] }}</td> 
+            <!-- Headcount column -->
+            <td>{{ project[3] }}</td> 
+            <!-- Total Hours column -->
+            <td>{{ project[4] }}</td> 
+        </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</body>
+</html>
