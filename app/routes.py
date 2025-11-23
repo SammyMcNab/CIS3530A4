@@ -175,6 +175,7 @@ def search():
 
 # For the A3. Projects Portfolio Summary 
 @main.route('/projects')
+@login_required
 def projects():
     sort_by = request.args.get("sort_by", "headcount")
     order = request.args.get("order", "ASC").upper()
@@ -220,6 +221,7 @@ def projects():
 # For the A4. Project Details & Assignment "Upsert" component 
 # Run with the url extension /project_details_and_upsert/<int:project_id> where project_id is a valid integer relevant to a project from the database 
 @main.route("/project_details_and_upsert/<int:project_id>", methods=["GET", "POST"])
+@login_required
 def project_details(project_id):
     try:
         # Establishes the connection with the database
