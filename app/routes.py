@@ -127,7 +127,7 @@ def create_new_account():
 
     return render_template('home.html')
 
-
+# For searching employees
 @main.route('/search')
 @login_required
 def search():
@@ -171,7 +171,6 @@ def search():
     cur.close()
     conn.close()
     return render_template('search.html', employees=employees)
-
 
 # For the A3. Projects Portfolio Summary 
 @main.route('/projects')
