@@ -1,3 +1,5 @@
+import psycopg2
+from psycopg2 import errors
 from flask import Blueprint, render_template, request, redirect, flash, session, url_for
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
@@ -7,7 +9,7 @@ main = Blueprint('main', __name__)
 
 DB_HOST = 'localhost'
 DB_USER = 'postgres'
-DB_PASSWORD = 'password123' # SHOULD BE CHANGED TO PASSWORD YOU CONFIGURE
+DB_PASSWORD = 'sAmmySaM)(2' # SHOULD BE CHANGED TO PASSWORD YOU CONFIGURE
 DB_NAME = 'my_company_db'
 
 def get_db_connection():
@@ -154,3 +156,245 @@ def search():
     cur.close()
     conn.close()
     return render_template('search.html', employees=employees)
+
+@main.route('/employees')
+@login_required
+def employee_list():
+    """A5: Employee list page (basic info + links for CRUD)."""
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT e.Ssn,
+               e.Fname,
+               e.Minit,
+               e.Lname,
+               d.Dname,
+               e.Address,
+               e.Salary
+        FROM Employee e
+        LEFT JOIN Department d ON e.Dno = d.Dnumber
+        ORDER BY e.Lname, e.Fname;
+    """)
+    employees = cur.fetchall()
+
+    cur.close()
+    conn.close()
+
+    return render_template('employee_list.html', employees=employees)
+
+@main.route('/employees/add', methods=['GET', 'POST'])
+@login_required
+def add_employee():
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    # Get department list for dropdown
+    cur.execute("SELECT Dnumber, Dname FROM Department ORDER BY Dname;")
+    departments = cur.fetchall()
+
+    if request.method == 'POST':
+        fname = request.form.get('fname', '').strip()
+        minit = request.form.get('minit', '').strip()
+        lname = request.form.get('lname', '').strip()
+        ssn   = request.form.get('ssn', '').strip()
+        address = request.form.get('address', '').strip()
+        sex   = request.form.get('sex', '').strip()
+        salary = request.form.get('salary', '').strip()
+        super_ssn = request.form.get('super_ssn', '').strip() or None
+        dno = request.form.get('dno', '').strip()
+        bdate = request.form.get('bdate') or None
+        empdate = request.form.get('empdate') or None
+
+        # Basic validation
+        if not (fname and minit and lname and ssn and address and sex and salary and dno):
+            flash("All fields except Supervisor SSN, Birth Date, and Employment Date are required.", "danger")
+            return render_template('add_employee.html', departments=departments)
+
+        try:
+            salary_int = int(salary)
+        except ValueError:
+            flash("Salary must be a valid integer.", "danger")
+            return render_template('add_employee.html', departments=departments)
+
+        try:
+            cur.execute("""
+                INSERT INTO Employee (Fname, Minit, Lname, Ssn, Address, Sex, Salary, Super_ssn, Dno, BDate, EmpDate)
+                VALUES (%s, %s, %s, %s, %s, %s, %s, %s, %s, %s, %s)
+            """, (fname, minit, lname, ssn, address, sex, salary_int, super_ssn, dno, bdate, empdate))
+
+            conn.commit()
+            flash("Employee added successfully.", "success")
+            return redirect(url_for('main.employee_list'))
+
+        except errors.UniqueViolation:
+            conn.rollback()
+            flash("SSN already exists. Please use a unique SSN.", "danger")
+            return render_template('add_employee.html', departments=departments)
+
+        except errors.ForeignKeyViolation:
+            conn.rollback()
+            flash("Invalid Department or Supervisor SSN (foreign key violation).", "danger")
+            return render_template('add_employee.html', departments=departments)
+
+        except Exception as e:
+            conn.rollback()
+            flash(f"Error adding employee: {str(e)}", "danger")
+            return render_template('add_employee.html', departments=departments)
+
+        finally:
+            cur.close()
+            conn.close()
+
+    # GET request
+    cur.close()
+    conn.close()
+    return render_template('add_employee.html', departments=departments)
+
+
+@main.route('/employees/edit/<ssn>', methods=['GET', 'POST'])
+@login_required
+def edit_employee(ssn):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    # Get department list
+    cur.execute("SELECT Dnumber, Dname FROM Department ORDER BY Dname;")
+    departments = cur.fetchall()
+
+    if request.method == 'POST':
+        address = request.form.get('address', '').strip()
+        salary = request.form.get('salary', '').strip()
+        dno = request.form.get('dno', '').strip()
+
+        if not (address and salary and dno):
+            flash("Address, Salary, and Department are required.", "danger")
+            return redirect(url_for('main.edit_employee', ssn=ssn))
+
+        try:
+            salary_int = int(salary)
+        except ValueError:
+            flash("Salary must be a valid integer.", "danger")
+            return redirect(url_for('main.edit_employee', ssn=ssn))
+
+        try:
+            cur.execute("""
+                UPDATE Employee
+                SET Address = %s,
+                    Salary = %s,
+                    Dno = %s
+                WHERE Ssn = %s
+            """, (address, salary_int, dno, ssn))
+
+            conn.commit()
+            flash("Employee updated successfully.", "success")
+            return redirect(url_for('main.employee_list'))
+
+        except errors.ForeignKeyViolation:
+            conn.rollback()
+            flash("Invalid Department (foreign key violation).", "danger")
+            return redirect(url_for('main.edit_employee', ssn=ssn))
+
+        except Exception as e:
+            conn.rollback()
+            flash(f"Error updating employee: {str(e)}", "danger")
+            return redirect(url_for('main.edit_employee', ssn=ssn))
+
+        finally:
+            cur.close()
+            conn.close()
+
+    # GET: fetch employee info
+    cur.execute("""
+        SELECT Fname, Minit, Lname, Ssn, Address, Salary, Dno
+        FROM Employee
+        WHERE Ssn = %s
+    """, (ssn,))
+    emp = cur.fetchone()
+
+    cur.close()
+    conn.close()
+
+    if emp is None:
+        flash("Employee not found.", "danger")
+        return redirect(url_for('main.employee_list'))
+
+    return render_template('edit_employee.html', emp=emp, departments=departments)
+
+
+@main.route('/employees/delete/<ssn>', methods=['POST'])
+@login_required
+def delete_employee(ssn):
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    try:
+        cur.execute("DELETE FROM Employee WHERE Ssn = %s", (ssn,))
+        conn.commit()
+
+        if cur.rowcount == 0:
+            flash("Employee not found.", "danger")
+        else:
+            flash("Employee deleted successfully.", "success")
+
+    except errors.ForeignKeyViolation:
+        conn.rollback()
+        return redirect(
+            url_for('main.employee_list', error="delete_failed")
+        )
+        #conn.rollback()
+        #flash(
+        #    "Cannot delete employee: They are still assigned to projects, "
+        #    "have dependents listed, or are a manager/supervisor.",
+        #    "danger"
+        #)
+
+    except Exception as e:
+        conn.rollback()
+        flash(f"Error deleting employee: {str(e)}", "danger")
+
+    finally:
+        cur.close()
+        conn.close()
+
+    return redirect(url_for('main.employee_list'))
+
+@main.route('/managers_overview')
+@login_required
+def managers_overview():
+    """A6: High-level overview of all departments with manager, headcount, and total hours."""
+    conn = get_db_connection()
+    cur = conn.cursor()
+
+    cur.execute("""
+        SELECT
+            d.Dnumber,
+            d.Dname,
+            -- Manager full name (may be NULL if no manager)
+            e_mgr.Fname,
+            e_mgr.Minit,
+            e_mgr.Lname,
+
+            -- DISTINCT employee count in the department
+            COUNT(DISTINCT e_emp.Ssn) AS employee_count,
+
+            -- Total hours worked by employees in this department across all projects
+            COALESCE(SUM(w.Hours), 0) AS total_hours
+        FROM Department d
+        LEFT JOIN Employee e_mgr
+            ON e_mgr.Ssn = d.Mgr_ssn             -- manager
+        LEFT JOIN Employee e_emp
+            ON e_emp.Dno = d.Dnumber             -- employees in department
+        LEFT JOIN Works_On w
+            ON w.Essn = e_emp.Ssn                -- hours for those employees
+        GROUP BY
+            d.Dnumber, d.Dname,
+            e_mgr.Fname, e_mgr.Minit, e_mgr.Lname
+        ORDER BY d.Dnumber;
+    """)
+
+    rows = cur.fetchall()
+    cur.close()
+    conn.close()
+
+    return render_template('managers_overview.html', departments=rows)

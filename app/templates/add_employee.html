@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Employee</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="create_account_page">
+    <h1>Add Employee</h1>
+
+    <form method="post" action="{{ url_for('main.add_employee') }}">
+        <div class="input_group">
+
+            <input type="text" name="fname" placeholder="First Name" required>
+            <input type="text" name="minit" placeholder="Middle Initial" maxlength="1" required>
+            <input type="text" name="lname" placeholder="Last Name" required>
+
+            <input type="text" name="ssn" placeholder="SSN (9 digits)" required>
+
+            <input type="text" name="address" placeholder="Address" required>
+
+            <input type="text" name="sex" placeholder="Sex (M/F)" maxlength="1" required>
+
+            <input type="number" name="salary" placeholder="Salary" required>
+
+            <input type="text" name="super_ssn" placeholder="Supervisor SSN (optional)">
+
+            <select name="dno" required class="dropdown" style="margin: 20px auto; width: 440px;">
+                <option value="" disabled selected>Select Department</option>
+                {% for d in departments %}
+                <option value="{{ d[0] }}">{{ d[1] }} ({{ d[0] }})</option>
+                {% endfor %}
+            </select>
+
+            <label for="bdate" style="font-size: 18px; color: white; display: block; margin-top: 12px;">
+                Birth Date (optional)
+            </label>
+            <input type="date" id="bdate" name="bdate">
+
+            <label for="empdate" style="font-size: 18px; color: white; display: block; margin-top: 12px;">
+                Employment Date (optional)
+            </label>
+            <input type="date" id="empdate" name="empdate">
+
+            <!--<input type="date" name="bdate" placeholder="Birth Date (optional)">
+            <input type="date" name="empdate" placeholder="Employment Date (optional)">-->
+
+            <a onclick="event.preventDefault(); this.closest('form').submit();" class="button">Create Employee</a>
+
+            <br>
+
+            <a href="{{ url_for('main.employee_list') }}" class="button">Cancel</a>
+        </div>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash {{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</body>
+</html>

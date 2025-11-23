@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Employee Management (A5)</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="search_page">
+    {% if request.args.get('error') == 'delete_failed' %}
+    <script>
+        alert("Cannot delete employee: They are still assigned to projects, have dependents listed, or are a manager/supervisor.");
+    </script>
+    {% endif %}
+
+    <header>
+        <div class="search_header_div">
+            <h1 class="search_header">Employee Management (A5)</h1>
+            <div class="nav_button_group">
+                <a href="{{ url_for('main.search') }}" class="button">Home</a>
+                <a href="#" class="button">A3</a>
+                <a href="#" class="button">A4</a>
+                <a href="{{ url_for('main.employee_list') }}" class="button">A5</a>
+                <a href="#" class="button">A6</a>
+                <a href="{{ url_for('main.logout') }}" class="button">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding: 20px;">
+        <div style="margin-bottom: 20px;">
+            <a href="{{ url_for('main.add_employee') }}" class="button" style="background-color: white; color: black; border: 1px solid black;">Add Employee</a>
+        </div>
+
+        <table class="search_table">
+            <thead>
+                <tr>
+                    <th>SSN</th>
+                    <th>Name</th>
+                    <th>Department</th>
+                    <th>Address</th>
+                    <th>Salary</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for emp in employees %}
+                <tr>
+                    <td>{{ emp[0] }}</td>
+                    <td>{{ emp[1] }} {{ emp[2] }}. {{ emp[3] }}</td>
+                    <td>{{ emp[4] }}</td>
+                    <td>{{ emp[5] }}</td>
+                    <td>{{ emp[6] }}</td>
+                    <td>
+                        <!-- Edit -->
+                        <a href="{{ url_for('main.edit_employee', ssn=emp[0]) }}" class="button">Edit</a>
+
+                        <!-- Delete: submit POST form -->
+                        <form method="post" action="{{ url_for('main.delete_employee', ssn=emp[0]) }}" style="display:inline;">
+                            <a href="#" class="button"
+                               onclick="event.preventDefault(); if (confirm('Are you sure you want to delete this employee?')) { this.closest('form').submit(); }">
+                                Delete
+                            </a>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Flash messages -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </main>
+</body>
+</html>
