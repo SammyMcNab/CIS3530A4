@@ -1,4 +1,4 @@
-# Some code was adapted from some examples for SQL execution, etc from the Flask_PostgreSQL_Project_update1 slides
+# Some code was adapted from some examples from the Flask_PostgreSQL_Project_update1 slides from class
 from flask import Blueprint, render_template, request, redirect, url_for, flash, session
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
