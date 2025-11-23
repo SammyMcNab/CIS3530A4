@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Employee Search</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="search_page">
+    <header>
+        <div class="search_header_div">
+            <h1 class="search_header">Home</h1>
+            <div class="nav_button_group">
+                <a href="{{ url_for('main.search') }}" class="button">Home</a>
+                <a href="#" class="button">A3</a>
+                <a href="#" class="button">A4</a>
+                <a href="#" class="button">A5</a>
+                <a href="#" class="button">A6</a>
+                <a href="{{ url_for('main.logout') }}" class="button">Logout</a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="filter-section">
+            
+            <form method="get" action="/search">
+                
+                <input type="text" name="search_name" placeholder="Search by name..." class="search-input" value="{{ request.args.get('search_name', '') }}">
+
+                <div class="dropdown-group">
+                    <div class="filter">
+                        <select id="sort_column" name="sort_column" class="dropdown" onchange="this.form.submit()">
+                            <option value="" disabled selected>Sort Column</option>
+                            <option value="e.Lname" {% if request.args.get('sort_column') == 'e.Lname' %}selected{% endif %}>Name</option>
+                            <option value="total_hours" {% if request.args.get('sort_column') == 'total_hours' %}selected{% endif %}>Hours Worked</option>
+                        </select>
+                    </div>
+
+                    <div class="filter">
+                        <select name="sort_by" id="sort_by" class="dropdown" onchange="this.form.submit()">
+                            <option value="" disabled selected>Sort Order</option>
+                            <option value="asc" {% if request.args.get('sort_by') == 'asc' %}selected{% endif %}>Ascending</option>
+                            <option value="desc" {% if request.args.get('sort_by') == 'desc' %}selected{% endif %}>Descending</option>
+                        </select>
+                    </div>
+                
+                    <div class="filter">
+                        <select name="department" id="department" class="dropdown" onchange="this.form.submit()">
+                            <option value="" disabled selected>Department</option>
+                            <option value="All Departments" {% if request.args.get('department') == 'All Departments' %}selected{% endif %}>All Departments</option>
+                            <option value="Headquarters" {% if request.args.get('department') == 'Headquarters' %}selected{% endif %}>Headquarters</option>
+                            <option value="Marketing" {% if request.args.get('department') == 'Marketing' %}selected{% endif %}>Marketing</option>
+                            <option value="Administration" {% if request.args.get('department') == 'Administration' %}selected{% endif %}>Administration</option>
+                            <option value="Research" {% if request.args.get('department') == 'Research' %}selected{% endif %}>Research</option>
+                            <option value="Finance" {% if request.args.get('department') == 'Finance' %}selected{% endif %}>Finance</option>
+                            <option value="Engineering" {% if request.args.get('department') == 'Engineering' %}selected{% endif %}>Engineering</option>
+                            <option value="Model" {% if request.args.get('department') == 'Model' %}selected{% endif %}>Model</option>
+                        </select>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <table class="search_table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Department Name</th>
+                    <th>Number of Dependents</th>
+                    <th>Number of Projects</th>
+                    <th>Total Hours Worked</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for employee in employees %}
+                <tr>
+                    <td>{{ employee[0] }} {{ employee[1] }}. {{ employee[2] }}</td>
+                    <td>{{ employee[3] }}</td>
+                    <td>{{ employee[4] }}</td>
+                    <td>{{ employee[5] }}</td>
+                    <td>{{ employee[6] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </main>
+</body>
+</html>

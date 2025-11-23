@@ -5,6 +5,35 @@
     <title>Login</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="home_page">
+<body class="login_page">
+    <h1>Login</h1>
+
+    <br><br><br><br><br><br>
+
+    <form method="post" action="{{ url_for('main.login') }}">
+        <div class="input_group">
+            <input type="text" id="username" name="username" placeholder="Username..." required>
+
+            <input type="password" id="password" name="password" placeholder="Password..." required>
+
+            <br>
+            
+            <a onclick="event.preventDefault(); this.closest('form').submit();" class="button">Log In</a>
+
+            <br>
+
+            <a href="{{ url_for('main.home') }}" class="button">Cancel</a>
+        </div>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash {{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
 </body>
 </html>

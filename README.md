@@ -22,4 +22,6 @@
 * The terminal will now provide the host address that the app is on. Go to that address on your preferred browser.
 
 # Index Justification
-* The indexes have not been selected at this time.
+* The selected indexes are for (last name, first name) in the Employee table, and (Pname) in the Project table.
+* The Employee index was selected for the sake of name-based queries. The search page, for example, has a search that does both full and partial searches for employees matching the entered string. Without the indexes, the partiality check is done for every row to find matches, but with the indexes, it can be accessed via index instead. One of the most common operations for admins using the application is to search for specific employees, so speeding up those large queries is essential to quick operations.
+* The Project index was selected for project information queries. Many different portions of the application depend on either querying based on project name, or fetching the project name (plus details) from the database. With the index, these are able to be accessed directly instead of scanning the entire table. Depending on the size of the company, this could be absolutely essential; however, even with small companies, it helps to have project-based searches be as efficient as possible.

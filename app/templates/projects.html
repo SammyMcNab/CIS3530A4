@@ -4,21 +4,21 @@
     <title>Projects Portfolio Summary</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
-<h1>Projects Portfolio Summary</h1>
+<body class="projects_page">
+<h1 class="projects_page h1">Projects Portfolio Summary</h1>
 
-<table border="2">
+<table>
     <thead>
         <tr>
-            <th>Project Name</th>
-            <th>Owning Department</th>
-            <th>
+            <th style="font-size:26px">Project Name</th>
+            <th style="font-size:26px">Owning Department</th>
+            <th style="font-size:26px">
                 <!-- Filters by ascending headcount -->
                 <a href="{{ url_for('main.projects', sort_by='headcount', order='ASC') }}">Headcount ↑</a> 
                 <!-- Filters by descending headcount -->
                 <a href="{{ url_for('main.projects', sort_by='headcount', order='DESC') }}">↓</a>
             </th>
-            <th>
+            <th style="font-size:26px">
                 <!-- Filters by ascending total hours -->
                 <a href="{{ url_for('main.projects', sort_by='total_hours', order='ASC') }}">Total Hours ↑</a> 
                 <!-- Filters by descending total hours -->
