@@ -7,7 +7,7 @@ CREATE TABLE user_authentication (
     username TEXT UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
     role TEXT NOT NULL CHECK (role IN ('admin','viewer'))
-)
+);
 
 -------------------------------------
 --      Index Initializations      --
