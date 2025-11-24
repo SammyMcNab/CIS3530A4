@@ -9,7 +9,7 @@ def create_app():
     app.secret_key = SECRET_KEY
 
     # Import and register routes
-    from .routes import main
+    from app.routes import main
     app.register_blueprint(main)
 
     return app

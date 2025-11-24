@@ -227,3 +227,104 @@ form {
     gap: 0;
     align-items: center;
 }
+
+/*----------------------------------*/
+/* Project Page Styles */
+/*----------------------------------*/
+
+.projects_page {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    height: 85vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    background-color: #042B59; 
+    flex-direction: column; 
+    text-align: center; 
+}
+
+th, td {
+    padding: 5px;
+    border: 2px solid black;
+    font-family: Arial, sans-serif;
+    color: #027DFD;
+}
+
+tbody tr:hover {
+    background-color: #114379; 
+}
+
+a {
+    font-family: Arial, sans-serif;
+    color: #027DFD;
+}
+
+.projects_page h1 {
+    background-color: #042B59;
+    padding: 10px;
+    color: #027DFD;
+    text-align: center;
+    margin: 0;
+    font-size: 48px;
+}
+
+
+/*-------------------------------------------*/
+/* Projects details and upsert Page Styles */
+/*-------------------------------------------*/
+
+.projects_details_page {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;    
+    background-color: #042B59; 
+    flex-direction: column; 
+    text-align: center; 
+}
+
+th, td {
+    padding: 5px;
+    border: 2px solid black;
+    font-family: Arial, sans-serif;
+    color: #027DFD;
+}
+
+tbody tr:hover {
+    background-color: #114379; 
+}
+
+a {
+    font-family: Arial, sans-serif;
+    color: #027DFD;
+}
+
+.projects_details_page h1 {
+    background-color: #042B59;
+    padding: 5px;
+    color: #027DFD;
+    text-align: center;
+    margin: 0;
+    font-size: 48px;
+}
+
+.projects_details_page h2 {
+    background-color: #042B59;
+    padding: 5px;
+    color: white;
+    text-align: center;
+    margin: 0;
+    font-size: 25px;
+}
+
+.projects_details_page h3 {
+    background-color: #042B59;
+    padding: 5px;
+    color: white;
+    text-align: center;
+    margin: 0;
+    font-size: 18px;
+}
+
