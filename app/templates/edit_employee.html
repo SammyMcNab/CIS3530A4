@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Employee</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="create_account_page">
+    <h1>Edit Employee</h1>
+
+    <form method="post" action="{{ url_for('main.edit_employee', ssn=emp[3]) }}">
+        <div class="input_group">
+
+            <!-- Name (read-only) -->
+            <input type="text" value="{{ emp[0] }} {{ emp[1] }}. {{ emp[2] }}" readonly>
+
+            <!-- SSN (visible, read-only) -->
+            <input type="text" value="SSN: {{ emp[3] }}" readonly>
+
+            <!-- Editable fields per assignment -->
+            <input type="text" name="address" placeholder="Address" value="{{ emp[4] }}" required>
+
+            <input type="number" name="salary" placeholder="Salary" value="{{ emp[5] }}" required>
+
+            <select name="dno" required class="dropdown" style="margin: 20px auto; width: 440px;">
+                {% for d in departments %}
+                <option value="{{ d[0] }}"
+                    {% if d[0] == emp[6] %}selected{% endif %}>
+                    {{ d[1] }} ({{ d[0] }})
+                </option>
+                {% endfor %}
+            </select>
+
+            <a onclick="event.preventDefault(); this.closest('form').submit();" class="button">Save Changes</a>
+
+            <br>
+
+            <a href="{{ url_for('main.employee_list') }}" class="button">Cancel</a>
+        </div>
+    </form>
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+            <div class="flash {{ category }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Managers Overview (A6)</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="search_page">
+    <header>
+        <div class="search_header_div">
+            <h1 class="search_header">Managers Overview (A6)</h1>
+            <div class="nav_button_group">
+                <a href="{{ url_for('main.search') }}" class="button">Home</a>
+                <a href="#" class="button">A3</a>
+                <a href="#" class="button">A4</a>
+                <a href="{{ url_for('main.employee_list') }}" class="button">A5</a>
+                <a href="{{ url_for('main.managers_overview') }}" class="button">A6</a>
+                <a href="{{ url_for('main.logout') }}" class="button">Logout</a>
+            </div>
+        </div>
+    </header>
+
+    <main style="padding: 20px;">
+        <table class="search_table">
+            <thead>
+                <tr>
+                    <th>Department</th>
+                    <th>Manager</th>
+                    <th>Employee Count</th>
+                    <th>Total Hours</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for dept in departments %}
+                <tr>
+                    <!-- Department name and number -->
+                    <td>{{ dept[1] }} ({{ dept[0] }})</td>
+
+                    <!-- Manager full name or placeholder -->
+                    <td>
+                        {% if dept[2] %}
+                            {{ dept[2] }} {{ dept[3] }}. {{ dept[4] }}
+                        {% else %}
+                            N/A
+                        {% endif %}
+                    </td>
+
+                    <!-- Employee count -->
+                    <td>{{ dept[5] }}</td>
+
+                    <!-- Total salary -->
+                    <td>{{ dept[6] }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <!-- Flash messages if we ever need them -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                <div class="flash {{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+    </main>
+</body>
+</html>
