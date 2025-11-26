@@ -39,6 +39,12 @@
                         {% if request.args.get('sort_by') == 'total_hours' and request.args.get('order') == 'DESC' %}selected{% endif %}>Descending (Hours)</option>
                     </select>
                 </div>
+
+                <div class="filter">
+                    <button type="button" class="button export-button" onclick="window.location.href='{{ request.full_path }}&export=1'">
+                        Export to CSV
+                    </button>
+                </div>
             </div>
         </div>
 
