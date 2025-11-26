@@ -13,43 +13,46 @@
     <form id="form" method="post" action="{{ url_for('main.create_new_account') }}">
         <div class="input_group">
             <input type="text" id="username" name="username" placeholder="Username..." required>
-
             <input type="password" id="password" name="password" placeholder="Password..." required>
 
-            <br>
-            
+            <!-- Role buttons -->
+            <div class="role-buttons">
+                <button type="button" id="adminBtn" data-role="admin">Admin</button>
+                <button type="button" id="viewerBtn" data-role="viewer">Viewer</button>
+            </div>
+
             <a onclick="event.preventDefault(); this.closest('form').submit();" class="button">Create Account</a>
 
             <br>
 
             <a href="{{ url_for('main.home') }}" class="button">Cancel</a>
         </div>
+
+        <!-- Hidden input to store the selected role -->
+        <input type="hidden" id="roleInput" name="role" value="">
     </form>
 
-    {% with messages = get_flashed_messages(with_categories=true) %}
-        {% if messages %}
-            {% for category, message in messages %}
-            <div class="flash {{ category }}">
-                {{ message }}
-            </div>
-            {% endfor %}
-        {% endif %}
-    {% endwith %}
-
     <script>
-        document.getElementById("username").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault(); // prevent default if needed
-                document.getElementById("form").submit();
-            }
-        });
+        // Get buttons and hidden input
+        const adminBtn = document.getElementById("adminBtn");
+        const viewerBtn = document.getElementById("viewerBtn");
+        const roleInput = document.getElementById("roleInput");
 
-        document.getElementById("password").addEventListener("keypress", function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault(); // prevent default if needed
-                document.getElementById("form").submit();
+        // Function to select a role
+        function selectRole(role) {
+            if (role === 'admin') {
+                adminBtn.classList.add("selected");
+                viewerBtn.classList.remove("selected");
+            } else {
+                viewerBtn.classList.add("selected");
+                adminBtn.classList.remove("selected");
             }
-        });
+            roleInput.value = role; // store in hidden input for form submission
+        }
+
+        // Event listeners
+        adminBtn.addEventListener("click", () => selectRole('admin'));
+        viewerBtn.addEventListener("click", () => selectRole('viewer'));
     </script>
 </body>
 </html>
