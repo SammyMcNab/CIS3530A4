@@ -4,48 +4,74 @@
     <title>Projects Portfolio Summary</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="projects_page">
-<h1 class="projects_page h1">Projects Portfolio Summary</h1>
+<body class="page">
+    <header>
+        <div class="header_div">
+            <h1 class="header">Projects</h1>
+            <div class="nav_button_group">
+                <a href="{{ url_for('main.search') }}" class="button">Home</a>
+                <a href="{{ url_for('main.projects') }}" class="button">Projects</a>
+                <a href="{{ url_for('main.employee_list') }}" class="button">Employee Management</a>
+                <a href="{{ url_for('main.managers_overview') }}" class="button">Manager Overview</a>
+                <a href="{{ url_for('main.logout') }}" class="button">Logout</a>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div class="filter-section-projects">
+            <div class="dropdown-group">
+                <div class="filter">
+                    <select id="sort_column" name="sort_column" class="dropdown" onchange="window.location.href=this.value;">
+                        <option value="" disabled selected>Sort by Headcount</option>
+                        <option value="{{ url_for('main.projects', sort_by='headcount', order='ASC') }}"
+                        {% if request.args.get('sort_by') == 'headcount' and request.args.get('order') == 'ASC' %}selected{% endif %}>Ascending (Headcount)</option>
+                        <option value="{{ url_for('main.projects', sort_by='headcount', order='DESC') }}"
+                        {% if request.args.get('sort_by') == 'headcount' and request.args.get('order') == 'DESC' %}selected{% endif %}>Descending (Headcount)</option>
+                    </select>
+                </div>
 
-<table>
-    <thead>
-        <tr>
-            <th style="font-size:26px">Project Name</th>
-            <th style="font-size:26px">Owning Department</th>
-            <th style="font-size:26px">
-                <!-- Filters by ascending headcount -->
-                <a href="{{ url_for('main.projects', sort_by='headcount', order='ASC') }}">Headcount ↑</a> 
-                <!-- Filters by descending headcount -->
-                <a href="{{ url_for('main.projects', sort_by='headcount', order='DESC') }}">↓</a>
-            </th>
-            <th style="font-size:26px">
-                <!-- Filters by ascending total hours -->
-                <a href="{{ url_for('main.projects', sort_by='total_hours', order='ASC') }}">Total Hours ↑</a> 
-                <!-- Filters by descending total hours -->
-                <a href="{{ url_for('main.projects', sort_by='total_hours', order='DESC') }}">↓</a> 
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-    <!-- For each project in the total list of projects -->
-    {% for project in projects %}
-        <tr>
-            <!-- Project Name column -->
-            <td>
-                <!-- Each project name has a link to their associated project details page. The name 'project_details' refers to the function in routes.py, not the actual HTML page project_details_and_upsert.html -->
-                <a href="{{ url_for('main.project_details', project_id=project[0]) }}">
-                    {{ project[1] }}
-                </a>
-            </td>
-            <!-- Owning Department column -->
-            <td>{{ project[2] }}</td> 
-            <!-- Headcount column -->
-            <td>{{ project[3] }}</td> 
-            <!-- Total Hours column -->
-            <td>{{ project[4] }}</td> 
-        </tr>
-    {% endfor %}
-    </tbody>
-</table>
+                <div class="filter">
+                    <select name="sort_by" id="sort_by" class="dropdown" onchange="window.location.href=this.value;">
+                        <option value="" disabled selected>Sort by Hours</option>
+                        <option value="{{ url_for('main.projects', sort_by='total_hours', order='ASC') }}"
+                        {% if request.args.get('sort_by') == 'total_hours' and request.args.get('order') == 'ASC' %}selected{% endif %}>Ascending (Hours)</option>
+                        <option value="{{ url_for('main.projects', sort_by='total_hours', order='DESC') }}"
+                        {% if request.args.get('sort_by') == 'total_hours' and request.args.get('order') == 'DESC' %}selected{% endif %}>Descending (Hours)</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Project Name</th>
+                    <th>Owning Department</th>
+                    <th>Headcount</th>
+                    <th>Total Hours</th>
+                </tr>
+            </thead>
+            <tbody>
+            <!-- For each project in the total list of projects -->
+            {% for project in projects %}
+                <tr>
+                    <!-- Project Name column -->
+                    <td>
+                        <!-- Each project name has a link to their associated project details page. The name 'project_details' refers to the function in routes.py, not the actual HTML page project_details_and_upsert.html -->
+                        <a href="{{ url_for('main.project_details', project_id=project[0]) }}">
+                            {{ project[1] }}
+                        </a>
+                    </td>
+                    <!-- Owning Department column -->
+                    <td>{{ project[2] }}</td> 
+                    <!-- Headcount column -->
+                    <td>{{ project[3] }}</td> 
+                    <!-- Total Hours column -->
+                    <td>{{ project[4] }}</td> 
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </main>
 </body>
 </html>
