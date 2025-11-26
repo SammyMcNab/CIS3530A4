@@ -5,23 +5,23 @@
     <title>Managers Overview (A6)</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="search_page">
+<body class="page">
     <header>
-        <div class="search_header_div">
-            <h1 class="search_header">Managers Overview (A6)</h1>
+        <div class="header_div">
+            <h1 class="header">Managers Overview</h1>
             <div class="nav_button_group">
                 <a href="{{ url_for('main.search') }}" class="button">Home</a>
-                <a href="#" class="button">A3</a>
-                <a href="#" class="button">A4</a>
-                <a href="{{ url_for('main.employee_list') }}" class="button">A5</a>
-                <a href="{{ url_for('main.managers_overview') }}" class="button">A6</a>
+                <a href="{{ url_for('main.projects') }}" class="button">Projects</a>
+                <a href="{{ url_for('main.employee_list') }}" class="button">Employee Management</a>
+                <a href="{{ url_for('main.managers_overview') }}" class="button">Manager Overview</a>
                 <a href="{{ url_for('main.logout') }}" class="button">Logout</a>
             </div>
         </div>
     </header>
 
-    <main style="padding: 20px;">
-        <table class="search_table">
+    <main>
+        <br><br><br><br><br>
+        <table class="table">
             <thead>
                 <tr>
                     <th>Department</th>
