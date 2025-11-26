@@ -346,3 +346,40 @@ a {
     font-size: 18px;
 }
 
+.export-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 8px 16px;
+    margin-left: 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+.export-button:hover {
+    background-color: #45a049;
+}
+
+.role-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    margin: 20px 0;
+}
+
+.role-buttons button {
+    padding: 10px 30px;
+    font-size: 16px;
+    border: 1px solid #333;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.role-buttons button.selected {
+    background-color: #4CAF50;
+    color: white;
+}
