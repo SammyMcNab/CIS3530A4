@@ -54,13 +54,13 @@ form {
 /* Search Page Styles */
 /*----------------------------------*/
 
-.search_page {
+.page {
     background-color: #027DFD;
     margin: 0;
     padding: 0;
 }
 
-.search_header_div {
+.header_div {
     background-color: #042B59;
     padding: 10px;
     color: white;
@@ -71,7 +71,7 @@ form {
     align-items: center;
 }
 
-.search_header {
+.header {
     margin: 0;
     font-size: 36px;
 }
@@ -88,41 +88,61 @@ form {
     padding: 8px 12px;
 }  
 
-.search_table {
+.table {
     width: 100%;
     border-collapse: collapse;
 }
 
-.search_table thead {
+.table thead {
     background-color: #042B59;
     color: white;
     font-weight: bold;
     font-size: 22px;
 }
 
-.search_table th, .search_table td {
+.table th, .table td {
     border-bottom: 1px solid #ccc;
     padding: 12px 10px;
     text-align: left;
 }
 
-.search_table tbody{
+.table tbody{
     background-color: #f1f1f1;
 }
 
-.search_table th:not(:last-child),
-.search_table td:not(:last-child) {
+.table th:not(:last-child),
+.table td:not(:last-child) {
     border-right: 1px solid #ccc;
 }
 
-.search_table tbody tr:nth-child(even) {
+.table tbody tr:nth-child(even) {
     background-color: #fafafa;
+}
+
+.table tbody tr:hover {
+    background-color: #e0e0e0;
+}
+
+.table--alt thead {
+    background-color: #007BFF;
+}
+
+.table--alt th {
+    color: white;
 }
 
 .filter-section {
     display: flex;
     align-items: flex-start;
     gap: 440px;
+    padding: 20px 0;
+}
+
+.filter-section-projects {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0px;
     padding: 20px 0;
 }
 
@@ -167,6 +187,19 @@ form {
     border-bottom: 8px solid white;
     margin: 0;
     font-size: 36px;
+}
+
+.create_account_page h2 {
+    color: white;
+    text-align: center;
+    margin-top: 20px;
+    font-size: 30px;
+}
+
+.create_account_page p {
+    color: white;
+    text-align: center;
+    font-size: 18px;
 }
 
 .create_account_page input {
@@ -233,15 +266,9 @@ form {
 /*----------------------------------*/
 
 .projects_page {
-    font-family: Arial, sans-serif;
+    background-color: #027DFD;
     margin: 0;
-    height: 85vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;    
-    background-color: #042B59; 
-    flex-direction: column; 
-    text-align: center; 
+    padding: 0;
 }
 
 th, td {
@@ -258,15 +285,6 @@ tbody tr:hover {
 a {
     font-family: Arial, sans-serif;
     color: #027DFD;
-}
-
-.projects_page h1 {
-    background-color: #042B59;
-    padding: 10px;
-    color: #027DFD;
-    text-align: center;
-    margin: 0;
-    font-size: 48px;
 }
 
 
