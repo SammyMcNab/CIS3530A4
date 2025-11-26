@@ -1,6 +1,7 @@
 import psycopg2
 from psycopg2 import errors
-from flask import Blueprint, render_template, request, redirect, flash, session, url_for
+from flask import Blueprint, render_template, request, redirect, flash, session, url_for, Response
+import csv
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import os
@@ -36,6 +37,16 @@ def login_required(view):
         return view(*args, **kwargs)
     return wrapped_view
 
+def login_required_admin(view):
+    @wraps(view)
+    def wrapped_view(*args, **kwargs):
+        # If no user_id or not admin, restrict access and send to login page
+        if "user_id" not in session or session.get("role") != "admin":
+            flash("You must be an admin to access this page.", "danger")
+            return redirect(url_for("main.login_page"))
+        return view(*args, **kwargs)
+    return wrapped_view
+
 # For the home page 
 @main.route('/')
 def home():
@@ -63,7 +74,7 @@ def login():
     cur = conn.cursor()
 
     # Run query
-    cur.execute("SELECT id, username, password_hash FROM user_authentication WHERE username = %s", (username,))
+    cur.execute("SELECT id, username, password_hash, role FROM user_authentication WHERE username = %s", (username,))
     user = cur.fetchone()
 
     # Validate password and user existence
@@ -75,6 +86,8 @@ def login():
     session.clear()
     session["user_id"] = user[0]
     session["username"] = user[1]
+    session["role"] = user[3]
+
     return redirect(url_for("main.search"))
 
 # For the logout page
@@ -94,10 +107,11 @@ def create_new_account():
     # Get parameters
     username = request.form.get("username", "").strip()
     password = request.form.get("password")
+    role = request.form.get("role")
 
     # Validate
-    if not username or not password:
-        flash("Username and password are required.", "danger")
+    if not username or not password or not role:
+        flash("Username, password, and role are required.", "danger")
         return render_template('create_account.html')
 
     # Get the hashed password
@@ -121,7 +135,7 @@ def create_new_account():
         INSERT INTO user_authentication (username, password_hash, role)
         VALUES (%s, %s, %s)
         RETURNING id
-    """, (username, password_hash, "viewer"))
+    """, (username, password_hash, role))
 
     # Commit change
     conn.commit()
@@ -138,6 +152,7 @@ def search():
     sort_column = request.args.get('sort_column')
     search_name = request.args.get('search_name', '').strip()
     search_pattern = f"%{search_name}%"
+    export = request.args.get('export')
 
     # Whitelist
     allowed_sort_columns = ['e.Lname', 'total_hours']
@@ -171,10 +186,27 @@ def search():
     employees = cur.fetchall()
     cur.close()
     conn.close()
+
+    if export:
+        def generate_csv():
+            output = []
+            header = ['First Name', 'Middle Initial', 'Last Name', 'Department', 'Num Dependents', 'Num Projects', 'Total Hours']
+            output.append(','.join(header))
+            for e in employees:
+                output.append(','.join([str(item) for item in e]))
+            return '\n'.join(output)
+
+        csv_content = generate_csv()
+
+        return Response(
+            csv_content,
+            mimetype="text/csv",
+            headers={"Content-Disposition": "attachment;filename=employees.csv"}
+        )
     return render_template('search.html', employees=employees)
 
 @main.route('/employees')
-@login_required
+@login_required_admin
 def employee_list():
     """A5: Employee list page (basic info + links for CRUD)."""
     conn = get_db_connection()
@@ -200,7 +232,7 @@ def employee_list():
     return render_template('employee_list.html', employees=employees)
 
 @main.route('/employees/add', methods=['GET', 'POST'])
-@login_required
+@login_required_admin
 def add_employee():
     conn = get_db_connection()
     cur = conn.cursor()
@@ -269,7 +301,7 @@ def add_employee():
 
 
 @main.route('/employees/edit/<ssn>', methods=['GET', 'POST'])
-@login_required
+@login_required_admin
 def edit_employee(ssn):
     conn = get_db_connection()
     cur = conn.cursor()
@@ -420,6 +452,7 @@ def managers_overview():
 def projects():
     sort_by = request.args.get("sort_by", "headcount")
     order = request.args.get("order", "ASC").upper()
+    export = request.args.get('export')
 
     # Establishes the order by checks based on the whitelist (to sort by total hours by ASCending order or sorting by headcount)
     if order not in ORDER_WHITELIST:
@@ -451,6 +484,23 @@ def projects():
         cursor.close()
         connection.close()
 
+        if export:
+            def generate_csv():
+                output = []
+                header = ['Project Name', 'Owning Department', 'Headcount', 'Total Hours']
+                output.append(','.join(header))
+                for p in projects:
+                    output.append(','.join([str(item) for item in p]))
+                return '\n'.join(output)
+
+            csv_content = generate_csv()
+
+            return Response(
+                csv_content,
+                mimetype="text/csv",
+                headers={"Content-Disposition": "attachment;filename=projects.csv"}
+            )
+
         return render_template("projects.html", projects=projects)
 
     # Returns an empty projects.html in case of an error
@@ -462,7 +512,7 @@ def projects():
 # For the A4. Project Details & Assignment "Upsert" component 
 # Run with the url extension /project_details_and_upsert/<int:project_id> where project_id is a valid integer relevant to a project from the database 
 @main.route("/project_details_and_upsert/<int:project_id>", methods=["GET", "POST"])
-@login_required
+@login_required_admin
 def project_details(project_id):
     try:
         # Establishes the connection with the database
