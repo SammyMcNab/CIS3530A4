@@ -21,10 +21,12 @@
     </header>
     <main>
         <div class="filter-section">
-            
             <form method="get" action="/search">
-                
-                <input type="text" name="search_name" placeholder="Search by name..." class="search-input" value="{{ request.args.get('search_name', '') }}">
+
+                <input type="text" name="search_name" placeholder="Search by name..." 
+                    class="search-input" value="{{ request.args.get('search_name', '') }}">
+
+                <input type="hidden" name="export" id="exportField" value="">
 
                 <div class="dropdown-group">
                     <div class="filter">
@@ -42,7 +44,7 @@
                             <option value="desc" {% if request.args.get('sort_by') == 'desc' %}selected{% endif %}>Descending</option>
                         </select>
                     </div>
-                
+
                     <div class="filter">
                         <select name="department" id="department" class="dropdown" onchange="this.form.submit()">
                             <option value="" disabled selected>Department</option>
@@ -57,11 +59,11 @@
                         </select>
                     </div>
 
-                    <button type="submit" name="export" value="1" class="button export-button">Export to CSV</button>
+                    <button type="button" onclick="exportCSV()" class="button export-button">
+                        Export to CSV
+                    </button>
                 </div>
             </form>
-
-            
         </div>
 
         <table class="table">
@@ -87,5 +89,13 @@
             </tbody>
         </table>
     </main>
+
+    <script>
+        function exportCSV() {
+            document.getElementById('exportField').value = "1";
+            document.querySelector('.filter-section form').submit();
+            document.getElementById('exportField').value = "";
+        }
+    </script>
 </body>
 </html>
