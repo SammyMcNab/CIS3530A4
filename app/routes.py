@@ -168,7 +168,7 @@ def search():
     # Get connection and start forming query
     conn = get_db_connection()
     cur = conn.cursor()
-    query = "SELECT e.Fname, e.Minit, e.Lname, d.Dname, COUNT(DISTINCT dp.Dependent_name) AS num_dependents, COUNT(DISTINCT w.Pno) AS num_projects, COALESCE(SUM(w.Hours), 0) AS total_hours FROM Employee e LEFT JOIN Department d ON e.Dno = d.Dnumber LEFT JOIN Dependent dp ON e.Ssn = dp.Essn LEFT JOIN Works_On w ON e.Ssn = w.Essn WHERE (%s = '' OR e.Fname || ' ' || e.Lname ILIKE %s)"
+    query = "SELECT e.Fname, e.Minit, e.Lname, d.Dname, COUNT(DISTINCT dp.Dependent_name) AS num_dependents, COUNT(DISTINCT w.Pno) AS num_projects, COALESCE(SUM(w.Hours), 0) AS total_hours FROM Employee e LEFT JOIN Department d ON e.Dno = d.Dnumber LEFT JOIN Dependent dp ON e.Ssn = dp.Essn LEFT JOIN Works_On w ON e.Ssn = w.Essn WHERE (%s = '' OR (e.Fname || ' ' || REPLACE(e.Minit, '.', '') || ' ' || e.Lname) ILIKE REPLACE(%s, '.', ''))"
 
     params = [search_name, search_pattern]
 
