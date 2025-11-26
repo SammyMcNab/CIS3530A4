@@ -5,7 +5,7 @@
     <title>Employee Management (A5)</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body class="search_page">
+<body class="page">
     {% if request.args.get('error') == 'delete_failed' %}
     <script>
         alert("Cannot delete employee: They are still assigned to projects, have dependents listed, or are a manager/supervisor.");
@@ -13,25 +13,24 @@
     {% endif %}
 
     <header>
-        <div class="search_header_div">
-            <h1 class="search_header">Employee Management (A5)</h1>
+        <div class="header_div">
+            <h1 class="header">Employee Management</h1>
             <div class="nav_button_group">
                 <a href="{{ url_for('main.search') }}" class="button">Home</a>
-                <a href="#" class="button">A3</a>
-                <a href="#" class="button">A4</a>
-                <a href="{{ url_for('main.employee_list') }}" class="button">A5</a>
-                <a href="#" class="button">A6</a>
+                <a href="{{ url_for('main.projects') }}" class="button">Projects</a>
+                <a href="{{ url_for('main.employee_list') }}" class="button">Employee Management</a>
+                <a href="{{ url_for('main.managers_overview') }}" class="button">Manager Overview</a>
                 <a href="{{ url_for('main.logout') }}" class="button">Logout</a>
             </div>
         </div>
     </header>
 
-    <main style="padding: 20px;">
-        <div style="margin-bottom: 20px;">
-            <a href="{{ url_for('main.add_employee') }}" class="button" style="background-color: white; color: black; border: 1px solid black;">Add Employee</a>
+    <main>
+        <div class="filter-section-projects">
+            <a href="{{ url_for('main.add_employee') }}" class="button" style="background-color: white; color: black;">Add Employee</a>
         </div>
 
-        <table class="search_table">
+        <table class="table">
             <thead>
                 <tr>
                     <th>SSN</th>
