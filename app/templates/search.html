@@ -56,8 +56,12 @@
                             <option value="Model" {% if request.args.get('department') == 'Model' %}selected{% endif %}>Model</option>
                         </select>
                     </div>
+
+                    <button type="submit" name="export" value="1" class="button export-button">Export to CSV</button>
                 </div>
             </form>
+
+            
         </div>
 
         <table class="table">
