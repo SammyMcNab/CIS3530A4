@@ -1,11 +1,10 @@
 import psycopg2
-from psycopg2 import errors
 from flask import Blueprint, render_template, request, redirect, flash, session, url_for, Response
 import csv
 from werkzeug.security import generate_password_hash, check_password_hash
 from functools import wraps
 import os
-import psycopg2
+
 
 main = Blueprint('main', __name__, template_folder="templates")
 
