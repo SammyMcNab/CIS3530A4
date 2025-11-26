@@ -10,7 +10,7 @@
 
     <br><br><br><br><br><br>
 
-    <form method="post" action="{{ url_for('main.create_new_account') }}">
+    <form id="form" method="post" action="{{ url_for('main.create_new_account') }}">
         <div class="input_group">
             <input type="text" id="username" name="username" placeholder="Username..." required>
 
@@ -35,5 +35,21 @@
             {% endfor %}
         {% endif %}
     {% endwith %}
+
+    <script>
+        document.getElementById("username").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault(); // prevent default if needed
+                document.getElementById("form").submit();
+            }
+        });
+
+        document.getElementById("password").addEventListener("keypress", function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault(); // prevent default if needed
+                document.getElementById("form").submit();
+            }
+        });
+    </script>
 </body>
 </html>
